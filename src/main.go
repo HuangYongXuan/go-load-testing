@@ -28,14 +28,14 @@ type Result struct {
 var result Result
 
 var startTime = time.Now().UnixNano()
+var endTime int64
 var wg sync.WaitGroup
 
 func main() {
 
-	startTime = time.Now().UnixNano()
-
 	flag.Parse()
 
+	startTime = time.Now().UnixNano()
 	if *c == 0 || *t == 0 || *u == "" {
 		flag.PrintDefaults()
 		return
@@ -47,7 +47,7 @@ func main() {
 	}
 
 	wg.Wait()
-	time.Sleep(time.Duration(2) * time.Second)
+	endTime = time.Now().UnixNano()
 	printInfo()
 }
 
@@ -77,9 +77,7 @@ func request(url string, i, c *int) {
 }
 
 func printInfo() {
-
-	endTime := time.Now().UnixNano()
-	_time := float64(endTime-startTime)/1e9 - 2
+	_time := float64(endTime-startTime) / 1e9
 	count := float64(result.Total) / _time
 	rate := float64(result.Success) / float64(result.Total) * 100.0
 
